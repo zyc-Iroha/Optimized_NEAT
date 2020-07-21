@@ -56,9 +56,9 @@ if __name__ == '__main__':
     print('\nBest genome:\n{!s}'.format(winner))
     
     winner_net = neat.nn.FeedForwardNetwork.create(winner, CONFIG)
-    with open('winner_neat_xor.pkl', 'wb') as output:
+    with open('winner.pkl', 'wb') as output:
         pickle.dump(winner_net, output, pickle.HIGHEST_PROTOCOL)
-    draw_net(winner_net, filename="neat_xor_winner")
+    draw_net(winner_net, filename="winner")
     plot_stats(stats, ylog=False, view=True, filename='avg_fitness_neat.svg')
     plot_species(stats, view=True, filename='speciation_neat.svg')
 
