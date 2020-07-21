@@ -16,7 +16,7 @@ CONFIG = None
 
 
 def eval_fitness(genomes, config):
-    for id, g in genomes:
+    for index, g in genomes:
         
         net = neat.nn.FeedForwardNetwork.create(g, config)
         
@@ -26,10 +26,9 @@ def eval_fitness(genomes, config):
             output = net.activate(new_input)
             sum_square_error += ((output[0] - expected[0]) ** 2.0) / 4.0
         
-        g.fitness = 1 / (1 + sum_square_error)
+        g.fitness = 100 / (1 + sum_square_error)
 
 
-# Create the population and run the XOR task by providing the above fitness function.
 def run(generations):
     pop = neat.population.Population(CONFIG)
     stats = neat.statistics.StatisticsReporter()
