@@ -1,16 +1,17 @@
-import neat 
+import neat
 import neat.nn
+
 try:
-   import cPickle as pickle
+    import cPickle as pickle
 except:
-   import pickle
+    import pickle
 import sys
 import os.path
 from neat.visualize import draw_net, plot_stats, plot_species
 
 # Network inputs and expected outputs.
-xor_inputs  = [(0.0, 0.0), (0.0, 1.0), (1.0, 0.0), (1.0, 1.0)]
-xor_outputs = [    (0.0,),     (1.0,),     (1.0,),     (0.0,)]
+xor_inputs = [(0.0, 0.0), (0.0, 1.0), (1.0, 0.0), (1.0, 1.0)]
+xor_outputs = [(0.0,), (1.0,), (1.0,), (0.0,)]
 
 # Config for FeedForwardNetwork.
 config = neat.config.Config(neat.genome.DefaultGenome, neat.reproduction.DefaultReproduction,
@@ -19,18 +20,16 @@ config = neat.config.Config(neat.genome.DefaultGenome, neat.reproduction.Default
 
 
 def eval_fitness(genomes, config):
-    
     for id, g in genomes:
-
+        
         net = neat.nn.FeedForwardNetwork.create(g, config)
         
         sum_square_error = 0.0
         for inputs, expected in zip(xor_inputs, xor_outputs):
-
             new_input = inputs
             output = net.activate(new_input)
-            sum_square_error += ((output[0] - expected[0])**2.0)/4.0
- 
+            sum_square_error += ((output[0] - expected[0]) ** 2.0) / 4.0
+        
         g.fitness = 1 - sum_square_error
 
 
@@ -50,7 +49,7 @@ if __name__ == '__main__':
     winner = result[0]
     stats = result[1]
     print('\nBest genome:\n{!s}'.format(winner))
-
+    
     # Verify network output against training data.
     print('\nOutput:')
     winner_net = neat.nn.FeedForwardNetwork.create(winner, config)
@@ -58,11 +57,10 @@ if __name__ == '__main__':
         new_input = inputs
         output = winner_net.activate(new_input)
         print("  input {!r}, expected output {!r}, got {!r}".format(inputs, expected, output))
-
+    
     # Save net if wished reused and draw it to a file.
     with open('winner_neat_xor.pkl', 'wb') as output:
         pickle.dump(winner_net, output, pickle.HIGHEST_PROTOCOL)
     draw_net(winner_net, filename="neat_xor_winner")
     plot_stats(stats, ylog=False, view=True, filename='avg_fitness_neat.svg')
     plot_species(stats, view=True, filename='speciation_neat.svg')
-
