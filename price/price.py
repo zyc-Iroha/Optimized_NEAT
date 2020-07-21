@@ -55,21 +55,20 @@ if __name__ == '__main__':
     winner = result[0]
     stats = result[1]
     print('\nBest genome:\n{!s}'.format(winner))
-
+    
     winner_net = neat.nn.FeedForwardNetwork.create(winner, CONFIG)
-    hit = 0
-    total = 0
-    for inputs, expected in zip(INPUT, OUTPUT):
-        new_input = inputs
-        output = winner_net.activate(new_input)
-        print("  input {!r}, expected output {!r}, got {!r}".format(inputs, expected, output))
-        total += 1
-        if int(output) == int(expected[0]):
-            hit += 1
-    print('Accuracy:', float(hit)/total)
-
     with open('winner_neat_xor.pkl', 'wb') as output:
         pickle.dump(winner_net, output, pickle.HIGHEST_PROTOCOL)
     draw_net(winner_net, filename="neat_xor_winner")
     plot_stats(stats, ylog=False, view=True, filename='avg_fitness_neat.svg')
     plot_species(stats, view=True, filename='speciation_neat.svg')
+
+    hit = 0
+    total = 0
+    for inputs, expected in zip(INPUT, OUTPUT):
+        new_input = inputs
+        output = winner_net.activate(new_input)
+        total += 1
+        if round(output[0]) == round(expected[0]):
+            hit += 1
+    print('Accuracy:', float(hit)/total)
